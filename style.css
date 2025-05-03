@@ -1,0 +1,134 @@
+
+:root{
+
+    --margin: 10px;
+    --key-size: 100px;
+}
+
+body{
+    margin: 0;
+}
+
+
+.page{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100vh;
+
+    background-color: azure;
+}
+
+.case{
+
+    display: flex;
+    flex-direction: row;
+    gap: var(--margin);
+}
+
+.output{
+
+    width: calc(var(--key-size) * 3 + var(--margin) * 2);
+    height: calc(var(--key-size) * 2 + var(--margin));
+
+    background-color: aquamarine;
+
+
+    display: flex;
+    align-items: end;
+    justify-content: end;
+
+}
+
+.output-text{
+
+    margin: var(--margin);
+
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:normal;
+    font-style: normal;
+    font-size: 32px;
+
+
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: rtl;
+}
+
+.left{
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--margin);
+}
+
+
+.numeric-keypad{
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--margin);
+}
+
+
+.keypad-row{
+
+    display: flex;
+    flex-direction: row;
+    gap: var(--margin);
+}
+
+.key{
+
+    background-color: aquamarine;
+
+    width: var(--key-size);
+    height: var(--key-size);
+
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    
+    transition: transform .2s;
+    transform: scale(1);
+
+    user-select: none;
+}
+
+.key:hover{
+
+    transition: transform .2s ease;
+    transform: scale(1.1);
+}
+
+.key:hover:active{
+
+    transition: transform .2s ease;
+    transform: scale(.9);
+}
+
+.key-text{
+
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:normal;
+    font-style: normal;
+}
+
+
+.operations-keypad{
+
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--margin);
+}
