@@ -361,16 +361,10 @@ addEventListener('keydown', (event) => {
 
 
 
-        case 'Shift': {
-
-            selectOperation(OPPOSITE)
-            break;
-        }
-
-
         default: {
 
-            console.log(event.key);
+            if(event.code === "ShiftLeft")
+                selectOperation(OPPOSITE);
 
             break;
         }
