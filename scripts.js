@@ -36,10 +36,33 @@ const DECIMAL = 7;
 
 const output = document.querySelector('#output');
 
+const getHistoryElement = (number) => document.querySelector(`#history-${number}`)
+const history = Array.from({ length: 4 }, (value, i) => getHistoryElement(i));
+
+
 
 function write(mssg) {
 
+    if(output.textContent !== ""){
+
+        history[3].textContent = history[2].textContent;
+        history[2].textContent = history[1].textContent;
+        history[1].textContent = history[0].textContent;
+        history[0].textContent = output.textContent;
+    }
+
     output.textContent = mssg;
+
+}
+
+function clearHistory(){
+
+    history[0].textContent = "";
+    history[1].textContent = "";
+    history[2].textContent = "";
+    history[3].textContent = "";
+
+    output.textContent = "";
 }
 
 
@@ -156,6 +179,7 @@ function selectOperation(op) {
     else if (op === CLEAR) {
 
         ClearInput();
+        clearHistory();
         write("");
     }
 

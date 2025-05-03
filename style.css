@@ -38,6 +38,7 @@ body{
 
 
     display: flex;
+    flex-direction: column;
     align-items: end;
     justify-content: end;
 
@@ -47,17 +48,26 @@ body{
 
     margin: var(--margin);
 
+    height: 40px;
+
     font-family: "Orbitron", sans-serif;
     font-optical-sizing: auto;
     font-weight:normal;
     font-style: normal;
     font-size: 32px;
 
-
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.output-text.small{
+
+    height: 38px;
+
+    margin: 0 var(--margin);
+    font-size: 24px;
+    color: rgb(75, 75, 75);
 }
 
 .left{
