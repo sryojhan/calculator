@@ -28,23 +28,53 @@ const SUBTRACT = 1;
 const MULTIPLY = 2;
 const DIVIDE = 3;
 const EQUALS = 4;
+const CLEAR = 5;
+const OPPOSITE = 6;
+const DECIMAL = 7;
 
 
 
 const output = document.querySelector('#output');
 
 
-function write(mssg){
+function write(mssg) {
 
     output.textContent = mssg;
 }
 
 
-let input = {
+let input = null;
 
-    first: 0,
-    operation: NOTSELECTED,
-    second: 0
+ClearInput();
+
+function ClearInput() {
+
+    input = {
+
+        first: 0,
+        operation: NOTSELECTED,
+        second: 0,
+
+        usingDecimal: false,
+
+        firstDecimal: {
+
+            length: 0,
+            value: 0
+        },
+        secondDecimal: {
+
+            length: 0,
+            value: 0
+        },
+
+        phantomText: false, //When showing the result with equals, dont be able to add new numbers to the result
+
+
+        calculateFirst: () => { return input.first + input.firstDecimal.value / Math.pow(10, input.firstDecimal.length) },
+        calculateSecond: () => { return input.second + input.secondDecimal.value / Math.pow(10, input.secondDecimal.length) }
+    }
+
 }
 
 
@@ -52,30 +82,52 @@ let input = {
 
 const getNumberButton = (number) => document.querySelector(`#n${number}`)
 
-const numberButtons = Array.from({ length: 9 }, (value, i) => getNumberButton(i + 1));
+const numberButtons = Array.from({ length: 10 }, (value, i) => getNumberButton(i));
 
 
 numberButtons.forEach((elem, idx) => {
 
-    elem.addEventListener('click', ()=>{
-        readNumber(idx + 1);
+    elem.addEventListener('click', () => {
+        readNumber(idx);
     });
-    
+
 })
 
 
-function readNumber(number){
+function readNumber(number) {
 
-
-    if(input.operation === NOTSELECTED){
-
-        input.first = input.first * 10 + number;
-        write(input.first);
+    if(input.phantomText)
+    {
+        ClearInput();
     }
-    else{
-        
-        input.second = input.second * 10 + number;
-        write(input.second);
+
+    if (input.operation === NOTSELECTED) {
+
+
+        if (!input.usingDecimal) {
+            input.first = input.first * 10 + number;
+        } else {
+
+            input.firstDecimal.length++;
+            input.firstDecimal.value = input.firstDecimal.value * 10 + number;
+        }
+
+        write(input.calculateFirst());
+
+    }
+    else {
+
+
+        if (!input.usingDecimal) {
+            input.second = input.second * 10 + number;
+        } else {
+
+            input.secondDecimal.length++;
+            input.secondDecimal.value = input.secondDecimal.value * 10 + number;
+        }
+
+
+        write(input.calculateSecond());
 
     }
 }
@@ -84,61 +136,104 @@ function readNumber(number){
 
 const getOperationButton = (number) => document.querySelector(`#op${number}`)
 
-const operationButtons = Array.from({ length: 5 }, (value, i) => getOperationButton(i));
+const operationButtons = Array.from({ length: 8 }, (value, i) => getOperationButton(i));
 
 
 operationButtons.forEach((elem, idx) => {
 
-    elem.addEventListener('click', ()=>{
+    elem.addEventListener('click', () => {
         selectOperation(idx);
     });
-    
+
 })
 
-function selectOperation(op){
+function selectOperation(op) {
 
 
-    if(op === EQUALS)
+    if (op === EQUALS)
         processOperation();
-    else{
 
-        input.operation = op;
+    else if (op === CLEAR) {
+
+        ClearInput();
         write("");
     }
 
+    else if (op === OPPOSITE) {
+
+        if (input.operation === NOTSELECTED) {
+
+            input.first *= -1;
+            write(input.first);
+        }
+        else {
+
+            input.second *= -1;
+            write(input.second);
+        }
+    }
+
+    else if (op === DECIMAL) {
+
+        input.usingDecimal = true;
+
+        if(input.operation === NOTSELECTED && input.first === 0)
+            write("0.");
+        else if(input.operation !== NOTSELECTED && input.second === 0)
+            write("0.");
+
+    }
+
+    else {
+
+        input.operation = op;
+        input.phantomText = false;
+        input.usingDecimal = false;
+
+        write("");
+    }
 
 }
 
 
-function processOperation(){
+function processOperation() {
+
+    if(input.operation === NOTSELECTED)
+    {
+        return;
+    }
 
     let result = 0;
 
-    switch(input.operation){
+    let error = false;
 
-        case ADD:{
+    switch (input.operation) {
 
-            result = input.first + input.second;
+        case ADD: {
+
+            result = input.calculateFirst() + input.calculateSecond();
             break;
         }
-        case SUBTRACT:{
+        case SUBTRACT: {
 
-            result = input.first - input.second;
+            result = input.calculateFirst() - input.calculateSecond();
             break;
         }
-        case MULTIPLY:{
+        case MULTIPLY: {
 
-            result = input.first * input.second;
+            result = input.calculateFirst() * input.calculateSecond();
             break;
         }
-        case DIVIDE:{
+        case DIVIDE: {
 
-            if(input.second === 0)
-                result = ":/";
+            if (input.calculateSecond() === 0) {
+                result = "not today...";
+                error = true;
+            }
 
-            else{
+            else {
 
-                result = input.first / input.second;
+                result = input.calculateFirst() / input.calculateSecond();
             }
 
             break;
@@ -148,8 +243,36 @@ function processOperation(){
 
     write(result);
 
-    input.first = result;
-    input.operation = NOTSELECTED;
-    input.second = 0;
+    if (!error) {
 
+        console.log("funciona");
+
+        input.first = result;
+        input.operation = NOTSELECTED;
+        input.second = 0;
+        input.usingDecimal = false;
+        input.phantomText = true;
+    }
+    else ClearInput();
 }
+
+
+
+addEventListener('keydown', (event) => {
+
+
+
+    switch (event.key) {
+        case 1:
+
+            break;
+
+        default:
+            break;
+    }
+
+
+});
+
+
+
