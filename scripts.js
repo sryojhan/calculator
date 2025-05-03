@@ -96,8 +96,7 @@ numberButtons.forEach((elem, idx) => {
 
 function readNumber(number) {
 
-    if(input.phantomText)
-    {
+    if (input.phantomText) {
         ClearInput();
     }
 
@@ -130,6 +129,7 @@ function readNumber(number) {
         write(input.calculateSecond());
 
     }
+
 }
 
 
@@ -175,12 +175,23 @@ function selectOperation(op) {
 
     else if (op === DECIMAL) {
 
-        input.usingDecimal = true;
+        if (!input.usingDecimal) {
 
-        if(input.operation === NOTSELECTED && input.first === 0)
-            write("0.");
-        else if(input.operation !== NOTSELECTED && input.second === 0)
-            write("0.");
+            input.usingDecimal = true;
+
+            if (input.operation === NOTSELECTED) {
+
+                if (input.first === 0)
+                    write("0.");
+                else write(input.calculateFirst() + ".");
+            }
+            else {
+
+                if (input.second === 0)
+                    write("0.");
+                else write(input.calculateSecond() + ".");
+            }
+        }
 
     }
 
@@ -198,8 +209,7 @@ function selectOperation(op) {
 
 function processOperation() {
 
-    if(input.operation === NOTSELECTED)
-    {
+    if (input.operation === NOTSELECTED) {
         return;
     }
 
@@ -241,16 +251,15 @@ function processOperation() {
 
     }
 
+
+
     write(result);
 
     if (!error) {
 
-        console.log("funciona");
+        ClearInput();
 
         input.first = result;
-        input.operation = NOTSELECTED;
-        input.second = 0;
-        input.usingDecimal = false;
         input.phantomText = true;
     }
     else ClearInput();
@@ -262,13 +271,85 @@ addEventListener('keydown', (event) => {
 
 
 
+    if (!isNaN(event.key)) {
+
+        let number = parseInt(event.key);
+        readNumber(number);
+    }
+
+
     switch (event.key) {
-        case 1:
+
+        case '+': {
+
+            selectOperation(ADD);
+            break;
+        }
+
+        case 'Enter': {
+
+            selectOperation(EQUALS)
+            break;
+        }
+
+
+        case '-': {
+
+            selectOperation(SUBTRACT)
+            break;
+        }
+
+
+        case '*': {
+
+            selectOperation(MULTIPLY)
+            break;
+        }
+
+
+
+        case '/': {
+
+            selectOperation(DIVIDE)
+            break;
+        }
+
+
+        case 'Escape': {
+
+            selectOperation(CLEAR)
+            break;
+        }
+
+
+        case '.': {
+
+            selectOperation(DECIMAL)
+            break;
+        }
+
+
+        case ',': {
+
+            selectOperation(DECIMAL)
+            break;
+        }
+
+
+
+        case 'Shift': {
+
+            selectOperation(OPPOSITE)
+            break;
+        }
+
+
+        default: {
+
+            console.log(event.key);
 
             break;
-
-        default:
-            break;
+        }
     }
 
 
