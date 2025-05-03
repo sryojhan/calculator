@@ -41,9 +41,9 @@ const history = Array.from({ length: 4 }, (value, i) => getHistoryElement(i));
 
 
 
-function write(mssg) {
+function write(mssg, updateHistory = true) {
 
-    if(output.textContent !== ""){
+    if(updateHistory && output.textContent !== ""){
 
         history[3].textContent = history[2].textContent;
         history[2].textContent = history[1].textContent;
@@ -134,7 +134,7 @@ function readNumber(number) {
             input.firstDecimal.value = input.firstDecimal.value * 10 + number;
         }
 
-        write(input.calculateFirst());
+        write(input.calculateFirst(), false);
 
     }
     else {
@@ -149,7 +149,7 @@ function readNumber(number) {
         }
 
 
-        write(input.calculateSecond());
+        write(input.calculateSecond(), false);
 
     }
 
